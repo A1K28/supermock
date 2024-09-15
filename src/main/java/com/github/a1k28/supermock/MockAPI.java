@@ -14,7 +14,8 @@ public class MockAPI {
     private final Method method;
     private final Object[] args;
 
-    public static MockAPI when(Method method, Object... args) {
+    public static MockAPI when(Class clazz, String methodName, Object... args) {
+        Method method = getMethod(clazz, methodName, args);
         return new MockAPI(method, args);
     }
 
@@ -49,5 +50,18 @@ public class MockAPI {
                 }
             }
         }
+    }
+
+    private static Method getMethod(Class clazz, String methodName, Object[] args) {
+        outer: for (Method method : clazz.getDeclaredMethods()) {
+            if (!method.getName().equals(methodName)) continue;
+            if ((args == null || args.length == 0) ^ method.getParameterCount() == 0) continue;
+            if (args == null) return method;
+            for (int i = 0; i < args.length; i++) {
+                if (args[i].getClass() != method.getParameterTypes()[i]) continue outer;
+            }
+            return method;
+        }
+        throw new RuntimeException("Declared method: " + methodName + " not found for class: " + clazz);
     }
 }
