@@ -32,11 +32,11 @@ public class MockAPI {
     }
 
     // assumes the VM flag: -Djdk.attach.allowAttachSelf=true
-    public static void attachAgentToThisJVM(List<String> whitelistedClasses) {
+    public static void attachAgentToThisJVM() {
         if (!agentLoaded) {
             synchronized (MockAPI.class) {
                 if (!agentLoaded) {
-                    DynamicAgentLoader.loadAgent(whitelistedClasses);
+                    DynamicAgentLoader.loadAgent();
 
                     try {
                         Class<?> reloaderClass = Class.forName("com.github.a1k28.interceptoragent.DynamicInterceptorAgent");

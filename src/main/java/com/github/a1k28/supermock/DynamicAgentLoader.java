@@ -6,11 +6,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.management.ManagementFactory;
 import java.net.URL;
-import java.util.List;
 
 public class DynamicAgentLoader {
 
-    public static void loadAgent(List<String> whitelistedClasses) {
+    public static void loadAgent() {
         try {
             // Path to the agent JAR inside your fat JAR
             String agentPath = "/libs/dynamic-interceptor-agent-1.0-SNAPSHOT.jar";
@@ -21,17 +20,10 @@ public class DynamicAgentLoader {
             // Get the pid of the current Java process
             String nameOfRunningVM = ManagementFactory.getRuntimeMXBean().getName();
             String pid = nameOfRunningVM.substring(0, nameOfRunningVM.indexOf('@'));
-            
-            StringBuilder options = new StringBuilder();
-            String sep = "";
-            for (String classname : whitelistedClasses) {
-                options.append(sep).append(classname);
-                sep = ",";
-            }
 
             // Load the agent
             com.sun.tools.attach.VirtualMachine vm = com.sun.tools.attach.VirtualMachine.attach(pid);
-            vm.loadAgent(tempFile.getAbsolutePath(), options.toString());
+            vm.loadAgent(tempFile.getAbsolutePath());
             vm.detach();
             
             // Optionally, delete the temp file when the JVM exits
