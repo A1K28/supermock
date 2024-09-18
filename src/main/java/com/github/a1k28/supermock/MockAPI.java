@@ -22,6 +22,10 @@ public class MockAPI {
         interceptorAPI.mockMethodReturns(method, object, args);
     }
 
+    public void thenReturnVoid() {
+        interceptorAPI.mockMethodReturns(method, null, args);
+    }
+
     public void thenThrow(Class exceptionType) {
         interceptorAPI.mockMethodThrows(method, exceptionType, args);
     }
