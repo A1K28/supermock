@@ -16,15 +16,15 @@ public class Parser {
         return wrap(res);
     }
 
-    public static Object deserialize(String object, Class<?> clazz) {
+    public static Object deserialize(Object object, Class<?> clazz) {
         if (object == null) return null;
         if (clazz == String.class) return object;
-        Object res = deserializePrimitive(object, clazz);
+        Object res = deserializePrimitive((String) object, clazz);
         if (res != null) return res;
         try {
-            return gson.fromJson(object, clazz);
+            return gson.fromJson((String) object, clazz);
         } catch (Exception e) {
-            return Arrays.asList(gson.fromJson(object, clazz.arrayType()));
+            return Arrays.asList(gson.fromJson((String) object, clazz.arrayType()));
         }
     }
 
