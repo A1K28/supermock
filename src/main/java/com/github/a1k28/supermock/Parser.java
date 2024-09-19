@@ -17,10 +17,18 @@ public class Parser {
 
     public static <T> T deserialize(String object, Class<T> clazz) {
         if (object == null) return null;
+        if (clazz == String.class)
+            return (T) object;
         try {
-            return gson.fromJson(object, clazz);
-        } catch (Exception e) {
-            return (T) Arrays.asList(gson.fromJson((String) object, clazz.arrayType()));
+            try {
+                return gson.fromJson(object, clazz);
+            } catch (Throwable e) {
+                e.printStackTrace();
+                return (T) Arrays.asList(gson.fromJson(object, clazz.arrayType()));
+            }
+        } catch (Throwable e) {
+            System.out.println("Could not deserialize: " + object);
+            throw e;
         }
     }
 
