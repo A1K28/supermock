@@ -1,5 +1,6 @@
 package com.github.a1k28.supermock;
 
+import com.github.a1k28.interceptoragent.ArgumentType;
 import com.github.a1k28.interceptoragent.InterceptorAPI;
 import lombok.RequiredArgsConstructor;
 
@@ -17,11 +18,20 @@ public class MockAPI {
 
     public static MockAPI when(Class clazz, String methodName, Object... args) {
         Method method = getMethod(clazz, methodName, args);
+        Object[] mockedArgs = new Object[args.length];
+        for (int i = 0; i < mockedArgs.length; i++) {
+            if (args[i] instanceof MockType) mockedArgs[i] = ArgumentType.ANY;
+            else mockedArgs[i] = args[i];
+        }
         return new MockAPI(method, args);
     }
 
     public void thenReturn(Object object) {
         interceptorAPI.mockMethodReturns(method, object, args);
+    }
+
+    public void thenReturnStub() {
+        interceptorAPI.mockMethodReturnStub(method, args);
     }
 
     public void thenReturnVoid() {
@@ -30,6 +40,14 @@ public class MockAPI {
 
     public void thenThrow(Class exceptionType) {
         interceptorAPI.mockMethodThrows(method, exceptionType, args);
+    }
+
+    public static MockType any() {
+        return MockType.ANY;
+    }
+
+    public static MockType stub() {
+        return MockType.STUB;
     }
 
     public static void resetMockState() {

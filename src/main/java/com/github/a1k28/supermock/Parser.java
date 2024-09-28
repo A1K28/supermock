@@ -10,9 +10,9 @@ public class Parser {
 
     public static String serialize(Object object) {
         if (object == null) return null;
-        if (object instanceof String) return wrap((String) object);
+        if (object instanceof String) return wrap((String) object, String.class);
         String res = gson.toJson(object);
-        return wrap(res);
+        return wrap(res, object.getClass());
     }
 
     public static <T> T deserialize(String object, Class<T> clazz) {
@@ -32,7 +32,20 @@ public class Parser {
         }
     }
 
-    private static String wrap(String str) {
+    private static String wrap(String str, Class clazz) {
+        if (isPrimitive(clazz))
+            return "\"" + str + "\"";
         return "\"\"\"\n" + str + "\"\"\"";
+    }
+
+    private static boolean isPrimitive(Class clazz) {
+        return clazz == Boolean.class || clazz == boolean.class ||
+                clazz == Byte.class || clazz == byte.class ||
+                clazz == Short.class || clazz == short.class ||
+                clazz == Integer.class || clazz == int.class ||
+                clazz == Long.class || clazz == long.class ||
+                clazz == Float.class || clazz == float.class ||
+                clazz == Double.class || clazz == double.class ||
+                clazz == Character.class || clazz == char.class;
     }
 }

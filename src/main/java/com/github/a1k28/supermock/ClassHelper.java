@@ -1,5 +1,7 @@
 package com.github.a1k28.supermock;
 
+import com.github.a1k28.interceptoragent.ArgumentType;
+
 import java.lang.reflect.Method;
 
 public class ClassHelper {
@@ -18,6 +20,9 @@ public class ClassHelper {
     }
 
     private static boolean equalsClasses(Class<?> c1, Class<?> c2) {
+        if (c2 == MockType.class)
+            return true;
+
         if (c1.equals(c2)) return true;
         if (c1.isAssignableFrom(c2)) return true;
 
