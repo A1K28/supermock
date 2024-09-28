@@ -30,8 +30,8 @@ public class MockAPI {
         interceptorAPI.mockMethodReturns(method, object, args);
     }
 
-    public void thenReturnStub() {
-        interceptorAPI.mockMethodReturnStub(method, args);
+    public void thenReturnStub(Class clazz) {
+        interceptorAPI.mockMethodReturnStub(clazz, method, args);
     }
 
     public void thenReturnVoid() {
