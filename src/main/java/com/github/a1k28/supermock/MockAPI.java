@@ -20,10 +20,10 @@ public class MockAPI {
         Method method = getMethod(clazz, methodName, args);
         Object[] mockedArgs = new Object[args.length];
         for (int i = 0; i < mockedArgs.length; i++) {
-            if (args[i] instanceof MockType) mockedArgs[i] = ArgumentType.ANY;
+            if (args[i].getClass() == MockType.class) mockedArgs[i] = ArgumentType.ANY;
             else mockedArgs[i] = args[i];
         }
-        return new MockAPI(method, args);
+        return new MockAPI(method, mockedArgs);
     }
 
     public void thenReturn(Object object) {
