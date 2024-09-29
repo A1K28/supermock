@@ -4,6 +4,7 @@ import com.github.a1k28.interceptoragent.ArgumentType;
 import com.github.a1k28.interceptoragent.InterceptorAPI;
 import lombok.RequiredArgsConstructor;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -53,6 +54,17 @@ public class MockAPI {
 
     public static MockType stub() {
         return MockType.STUB;
+    }
+
+    public static void setField(Object instance, String name, Object value) throws IllegalAccessException {
+        Class clazz = instance.getClass();
+        for (Field field : clazz.getDeclaredFields()) {
+            if (field.getName().equals(name)) {
+                field.setAccessible(true);
+                field.set(instance, value);
+                break;
+            }
+        }
     }
 
     public static void resetMockState() {
