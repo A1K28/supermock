@@ -1,7 +1,5 @@
 package com.github.a1k28.supermock;
 
-import com.github.a1k28.interceptoragent.ArgumentType;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
