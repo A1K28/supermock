@@ -3,20 +3,26 @@ package com.github.a1k28.supermock;
 import com.github.a1k28.interceptoragent.ArgumentType;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClassHelper {
-    public static Method getMethod(Class clazz, String methodName, Object[] args) {
+    public static List<Method> getMethods(Class clazz, String methodName, Object[] args) {
+        List<Method> result = new ArrayList<>();
         outer: for (Method method : clazz.getDeclaredMethods()) {
             if (!method.getName().equals(methodName)) continue;
             if ((args == null || args.length == 0) ^ method.getParameterCount() == 0) continue;
-            if (args == null) return method;
+            if (args == null) return List.of(method);
             if (args.length != method.getParameterCount()) continue;
             for (int i = 0; i < args.length; i++) {
+                if (args[i] == null) continue;
                 if (!equalsClasses(method.getParameterTypes()[i], args[i].getClass())) continue outer;
             }
-            return method;
+            result.add(method);
         }
-        throw new RuntimeException("Declared method: " + methodName + " not found for class: " + clazz);
+        if (result.isEmpty())
+            throw new RuntimeException("Declared method: " + methodName + " not found for class: " + clazz);
+        return result;
     }
 
     private static boolean equalsClasses(Class<?> c1, Class<?> c2) {
